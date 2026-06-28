@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="20dp" />
+
+        <!-- Step 1 -->
+        <TextView style="@style/SetupStepTitle" android:text="@string/step_enable" />
+        <TextView style="@style/SetupStepDesc" android:text="@string/step_enable_desc" />
+        <Button android:id="@+id/btn_enable" style="@style/SetupStepBtn"
+            android:text="@string/step_enable_btn" />
+
+        <!-- Step 2 -->
+        <TextView style="@style/SetupStepTitle" android:text="@string/step_select" />
+        <TextView style="@style/SetupStepDesc" android:text="@string/step_select_desc" />
+        <Button android:id="@+id/btn_select" style="@style/SetupStepBtn"
+            android:text="@string/step_select_btn" />
+
+        <!-- Step 3 -->
+        <TextView style="@style/SetupStepTitle" android:text="@string/step_mic" />
+        <TextView style="@style/SetupStepDesc" android:text="@string/step_mic_desc" />
+        <TextView android:id="@+id/tv_mic_status" style="@style/SetupStatus" />
+        <Button android:id="@+id/btn_mic" style="@style/SetupStepBtn"
+            android:text="@string/step_mic_btn" />
+
+        <!-- Step 4 -->
+        <TextView style="@style/SetupStepTitle" android:text="@string/step_model" />
+        <TextView style="@style/SetupStepDesc" android:text="@string/step_model_desc" />
+        <TextView android:id="@+id/tv_model_status" style="@style/SetupStatus" />
+        <ProgressBar android:id="@+id/progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:visibility="gone" />
+        <Button android:id="@+id/btn_model" style="@style/SetupStepBtn"
+            android:text="@string/step_model_btn" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <Button android:id="@+id/btn_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/open_settings_btn" />
+    </LinearLayout>
+</ScrollView>

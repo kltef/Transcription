@@ -1,0 +1,14 @@
+<resources>
+    <string-array name="threads_entries">
+        <item>2 threads</item>
+        <item>4 threads</item>
+        <item>6 threads</item>
+        <item>8 threads</item>
+    </string-array>
+    <string-array name="threads_values">
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+    </string-array>
+</resources>

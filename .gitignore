@@ -1,0 +1,19 @@
+# Android / Gradle build output
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/
+.cxx/
+
+# Large binaries fetched by scripts/fetch-native.sh (not committed)
+app/libs/*.aar
+app/src/main/assets/streaming-zipformer/*.onnx
+app/src/main/assets/streaming-zipformer/tokens.txt
+
+# whisper.cpp source vendored by scripts/fetch-native.sh (not committed)
+app/src/main/cpp/whisper.cpp/
+
+# Whisper model is downloaded at runtime into the app's files dir
+*.bin

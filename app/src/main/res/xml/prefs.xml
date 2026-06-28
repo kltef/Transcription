@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/pref_category_engine">
+
+        <SwitchPreferenceCompat
+            app:key="refine_with_whisper"
+            app:defaultValue="true"
+            app:title="@string/pref_refine_title"
+            app:summary="@string/pref_refine_summary" />
+
+        <SwitchPreferenceCompat
+            app:key="streaming_preview"
+            app:defaultValue="true"
+            app:title="@string/pref_streaming_title"
+            app:summary="@string/pref_streaming_summary" />
+
+        <ListPreference
+            app:key="cpu_threads"
+            app:defaultValue="4"
+            app:title="@string/pref_threads_title"
+            app:summary="@string/pref_threads_summary"
+            app:entries="@array/threads_entries"
+            app:entryValues="@array/threads_values" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_category_keyboard">
+
+        <SwitchPreferenceCompat
+            app:key="haptics"
+            app:defaultValue="true"
+            app:title="@string/pref_haptics_title"
+            app:summary="@string/pref_haptics_summary" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

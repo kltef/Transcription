@@ -1,0 +1,11 @@
+<resources>
+    <color name="ic_launcher_background">#1E1B2E</color>
+
+    <color name="kb_background">#1B1B1F</color>
+    <color name="kb_key">#2C2C32</color>
+    <color name="kb_key_pressed">#3A3A42</color>
+    <color name="kb_text">#ECECF1</color>
+    <color name="kb_hint">#9A9AA5</color>
+    <color name="mic_idle">#6C5CE7</color>
+    <color name="mic_active">#E74C5C</color>
+</resources>

@@ -1,0 +1,2 @@
+# The sherpa-onnx streaming Zipformer model files are placed here by scripts/fetch-native.sh.
+# They are intentionally not committed to git (large binaries).
