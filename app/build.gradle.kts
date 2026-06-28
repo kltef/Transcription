@@ -16,8 +16,13 @@ android {
 
         // Native engines (whisper.cpp via CMake) only ship for these ABIs.
         // arm64-v8a covers essentially all modern phones; armeabi-v7a is for older 32-bit devices.
+        // Pass -PslimAbi to build an arm64-v8a-only APK (~26 MB smaller, no 32-bit libs).
         ndk {
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            if (project.hasProperty("slimAbi")) {
+                abiFilters += "arm64-v8a"
+            } else {
+                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            }
         }
 
         externalNativeBuild {

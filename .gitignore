@@ -17,3 +17,6 @@ app/src/main/cpp/whisper.cpp/
 
 # Whisper model is downloaded at runtime into the app's files dir
 *.bin
+
+# Built APKs (don't commit large binaries)
+*.apk
