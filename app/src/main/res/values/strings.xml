@@ -39,7 +39,7 @@
 
     <!-- Settings -->
     <string name="pref_refine_title">Refine with Whisper</string>
-    <string name="pref_refine_summary">Polish each phrase for best accuracy and punctuation (adds a brief pause). Turn off for lowest latency.</string>
+    <string name="pref_refine_summary">Slower. Re-transcribes each phrase with Whisper for maximum accuracy. Leave off for fast dictation (streaming already adds capitals + punctuation).</string>
     <string name="pref_threads_title">CPU threads</string>
     <string name="pref_threads_summary">More threads = faster refine, more battery.</string>
     <string name="pref_streaming_title">Live streaming preview</string>

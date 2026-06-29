@@ -10,8 +10,11 @@ import androidx.preference.PreferenceManager
 class Prefs(context: Context) {
     private val sp = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
-    /** Refine each finished phrase with Whisper for best accuracy/punctuation. */
-    val refineWithWhisper: Boolean get() = sp.getBoolean(KEY_REFINE, true)
+    /**
+     * Refine each finished phrase with Whisper for best accuracy. Off by default: it adds
+     * noticeable latency, and streaming + punctuation already gives fast, cased, punctuated text.
+     */
+    val refineWithWhisper: Boolean get() = sp.getBoolean(KEY_REFINE, false)
 
     /** Show streaming words as you speak (before the Whisper refine pass). */
     val streamingPreview: Boolean get() = sp.getBoolean(KEY_STREAMING, true)

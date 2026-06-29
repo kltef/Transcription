@@ -134,7 +134,8 @@ class DictationController(
             finalText = punctuate(streamingText)
         }
 
-        if (finalText.isNotBlank()) listener.onFinalSegment(finalText.trim())
+        finalText = TextFormatter.sentenceCase(finalText)
+        if (finalText.isNotBlank()) listener.onFinalSegment(finalText)
     }
 
     /** Add capitalization + punctuation to streaming text, if enabled and the model loads. */

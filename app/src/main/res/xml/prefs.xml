@@ -5,7 +5,7 @@
 
         <SwitchPreferenceCompat
             app:key="refine_with_whisper"
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:title="@string/pref_refine_title"
             app:summary="@string/pref_refine_summary" />
 

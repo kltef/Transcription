@@ -45,14 +45,15 @@ jobs:
       - name: Publish as a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.3.3-debug
-          name: Voice Keyboard v0.3.3 (debug)
+          tag_name: v0.3.4-debug
+          name: Voice Keyboard v0.3.4 (debug)
           body: |
             On-device voice dictation keyboard — arm64-v8a, debug-signed (sideload-ready).
 
-            **Fix in 0.3.3:** caps-lock no longer gets stuck — it now needs a deliberate
-            double-tap of shift, shows a clear filled/locked indicator, and resets to lowercase
-            whenever a new text box opens. (Tap shift once to clear caps lock.)
+            **Fix in 0.3.4:** voice typing no longer comes out in ALL CAPS — text is now forced to
+            normal sentence case. Whisper refine is OFF by default for fast dictation (streaming +
+            punctuation already capitalizes and punctuates); you can re-enable it in settings for
+            maximum accuracy. Includes the 0.3.3 caps-lock keyboard fixes.
 
             **Install:** download `VoiceKeyboard-arm64-debug.apk` below on your phone and
             open it (allow "install unknown apps"). Then open the app, enable the keyboard,
