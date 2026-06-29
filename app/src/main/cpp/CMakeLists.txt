@@ -17,6 +17,11 @@ set(WHISPER_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(WHISPER_BUILD_SERVER   OFF CACHE BOOL "" FORCE)
 set(GGML_OPENMP            OFF CACHE BOOL "" FORCE)   # NDK has no system OpenMP by default
 
+# CRITICAL: always build the native engine optimized, even in a debug APK. ggml/whisper are
+# ~10x slower when compiled at -O0 (the default for the debug variant), which made Whisper take
+# tens of seconds. Force -O3 + NDEBUG for everything compiled below (whisper, ggml, our shim).
+add_compile_options(-O3 -DNDEBUG)
+
 add_subdirectory(${WHISPER_DIR} ${CMAKE_BINARY_DIR}/whisper_cpp_build)
 
 # Our thin JNI shim.
