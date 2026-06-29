@@ -41,6 +41,7 @@ class KeyboardLayout(
     private var page = Page.LETTERS
     private var shifted = false
     private var capsLock = false
+    private var lastShiftTapMs = 0L
 
     // Letter keys whose caps must follow the shift state: (label view, base lowercase char).
     private val letterKeys = ArrayList<Pair<TextView, Char>>()
@@ -258,11 +259,22 @@ class KeyboardLayout(
     // ---- State ---------------------------------------------------------------------
 
     private fun onShift() {
+        val now = System.currentTimeMillis()
         when {
-            capsLock -> { capsLock = false; shifted = false }      // caps -> off
-            shifted -> { capsLock = true }                          // shift -> caps lock
-            else -> shifted = true                                  // off -> shift
+            capsLock -> { capsLock = false; shifted = false }                  // caps -> off
+            shifted && now - lastShiftTapMs < DOUBLE_TAP_MS -> capsLock = true // quick double tap -> caps lock
+            shifted -> shifted = false                                         // single shift -> off
+            else -> shifted = true                                            // off -> one-shot shift
         }
+        lastShiftTapMs = now
+        refreshCaps()
+    }
+
+    /** Reset shift/caps state — called when a new text field opens so caps never gets "stuck". */
+    fun resetShift() {
+        shifted = false
+        capsLock = false
+        lastShiftTapMs = 0L
         refreshCaps()
     }
 
@@ -276,10 +288,17 @@ class KeyboardLayout(
         letterKeys.forEach { (tv, base) ->
             tv.text = if (upper) base.uppercaseChar().toString() else base.toString()
         }
-        shiftIcon?.imageTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(context, if (upper) R.color.mic_idle else R.color.kb_text)
-        )
+        shiftIcon?.apply {
+            setImageResource(if (capsLock) R.drawable.ic_caps_lock else R.drawable.ic_shift)
+            imageTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(context, if (upper) R.color.mic_idle else R.color.kb_text)
+            )
+        }
     }
 
     private fun dp(v: Int): Int = (v * density).toInt()
+
+    companion object {
+        private const val DOUBLE_TAP_MS = 350L
+    }
 }

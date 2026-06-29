@@ -88,6 +88,7 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
         super.onStartInputView(info, restarting)
         showStatus(R.string.tap_to_dictate)
         setMicActive(false)
+        keyboard?.resetShift() // never carry caps lock into a new field
     }
 
     override fun onFinishInput() {
