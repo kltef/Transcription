@@ -49,10 +49,20 @@ Java_com_kltef_voicekeyboard_asr_WhisperRefiner_nativeTranscribe(
     params.print_special    = false;
     params.translate        = false;
     params.no_context       = true;
-    params.single_segment   = false;
     params.language         = "en";
     params.n_threads        = threads > 0 ? threads : 4;
     params.suppress_blank   = true;
+    params.temperature_inc  = 0.0f; // disable slow temperature-fallback retries
+
+    // Big speedup for dictation: the encoder normally processes a full 30 s window. Cap the
+    // audio context to the actual utterance length (~50 encoder frames per second).
+    int audio_ctx = static_cast<int>(n / 320) + 16;
+    if (audio_ctx > 1500) audio_ctx = 1500;
+    if (audio_ctx < 64) audio_ctx = 64;
+    params.audio_ctx = audio_ctx;
+
+    // Short phrases are a single segment; only allow multi-segment for long (>10 s) audio.
+    params.single_segment = (n < 16000 * 10);
 
     if (whisper_full(ctx, params, samples.data(), n) != 0) {
         LOGE("whisper_full failed");

@@ -45,15 +45,15 @@ jobs:
       - name: Publish as a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.3.5-debug
-          name: Voice Keyboard v0.3.5 (debug)
+          tag_name: v0.3.6-debug
+          name: Voice Keyboard v0.3.6 (debug)
           body: |
             On-device voice dictation keyboard — arm64-v8a, debug-signed (sideload-ready).
 
-            **Fix in 0.3.5:** Whisper is no longer painfully slow — the native engine is now
-            compiled optimized (-O3) instead of unoptimized, cutting refine time dramatically.
-            Voice typing is fast by default (streaming + punctuation, normal sentence case);
-            optional Whisper refine in settings is now actually usable for max accuracy.
+            **Faster Whisper (0.3.6):** on top of the -O3 build, the encoder now only processes
+            the actual phrase length (audio_ctx) with single-segment decoding and no temperature
+            fallback — several times faster again on short dictation. Streaming is still the fast
+            default; Whisper refine (settings) is now quick enough for everyday use.
 
             **Install:** download `VoiceKeyboard-arm64-debug.apk` below on your phone and
             open it (allow "install unknown apps"). Then open the app, enable the keyboard,
