@@ -29,6 +29,7 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
     private lateinit var prefs: Prefs
     private var binding: KeyboardViewBinding? = null
     private var controller: DictationController? = null
+    private var keyboard: KeyboardLayout? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -43,10 +44,6 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
             haptic(v)
             toggleDictation()
         }
-        b.backspaceKey.setOnClickListener { v -> haptic(v); sendBackspace() }
-        b.backspaceKey.setOnLongClickListener { v -> haptic(v); deleteWord(); true }
-        b.spaceKey.setOnClickListener { v -> haptic(v); commit(" ") }
-        b.enterKey.setOnClickListener { v -> haptic(v); sendEnter() }
         b.switchIme.setOnClickListener {
             (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
         }
@@ -54,6 +51,15 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
             startActivity(Intent(this, SetupActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
+
+        // Build the QWERTY / symbols keyboard into the container.
+        keyboard = KeyboardLayout(this, b.keysContainer, object : KeyboardLayout.Listener {
+            override fun onChar(text: String) = commit(text)
+            override fun onBackspace() = sendBackspace()
+            override fun onBackspaceRepeat() = sendBackspace()
+            override fun onEnter() = sendEnter()
+            override fun haptic(v: View) = this@VoiceKeyboardService.haptic(v)
+        })
         return b.root
     }
 
@@ -71,6 +77,7 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
     override fun onDestroy() {
         controller?.shutdown()
         controller = null
+        keyboard = null
         binding = null
         super.onDestroy()
     }
@@ -149,18 +156,6 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
         } else {
             ic.commitText("", 1)
         }
-    }
-
-    /** Long-press backspace: delete the word (and any trailing spaces) before the cursor. */
-    private fun deleteWord() {
-        val ic = currentInputConnection ?: return
-        val before = ic.getTextBeforeCursor(64, 0) ?: return
-        if (before.isEmpty()) return
-        var i = before.length
-        while (i > 0 && before[i - 1].isWhitespace()) i--       // trailing spaces
-        while (i > 0 && !before[i - 1].isWhitespace()) i--      // the word itself
-        val deleteCount = before.length - i
-        ic.deleteSurroundingText(if (deleteCount > 0) deleteCount else 1, 0)
     }
 
     private fun sendEnter() {

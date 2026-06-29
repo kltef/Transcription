@@ -5,99 +5,62 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/kb_background"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="10dp">
+    android:paddingHorizontal="4dp"
+    android:paddingBottom="6dp"
+    android:paddingTop="4dp">
 
-    <!-- Status line + live streaming preview. -->
-    <TextView
-        android:id="@+id/status_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minLines="2"
-        android:maxLines="3"
-        android:ellipsize="start"
-        android:paddingHorizontal="12dp"
-        android:textColor="@color/kb_hint"
-        android:textSize="15sp"
-        android:text="@string/tap_to_dictate" />
-
-    <!-- Center mic button. -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="14dp">
-
-        <ImageButton
-            android:id="@+id/mic_button"
-            android:layout_width="84dp"
-            android:layout_height="84dp"
-            android:layout_gravity="center"
-            android:background="@drawable/mic_button_bg"
-            android:backgroundTint="@color/mic_idle"
-            android:src="@drawable/ic_mic"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/mic_content_desc" />
-    </FrameLayout>
-
-    <!-- Bottom utility row. -->
+    <!-- Top toolbar: keyboard switch, settings, live status, and the dictation mic. -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="46dp"
         android:orientation="horizontal"
-        android:weightSum="10"
-        android:baselineAligned="false">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="4dp">
 
         <ImageButton
             android:id="@+id/switch_ime"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_margin="3dp"
-            android:background="@drawable/key_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_keyboard"
             android:contentDescription="@string/switch_ime_content_desc" />
 
         <ImageButton
             android:id="@+id/settings_key"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_margin="3dp"
-            android:background="@drawable/key_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_settings"
             android:contentDescription="@string/settings_content_desc" />
 
-        <Button
-            android:id="@+id/space_key"
+        <TextView
+            android:id="@+id/status_text"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_margin="3dp"
-            android:background="@drawable/key_bg"
-            android:textAllCaps="false"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/kb_hint"
-            android:text="@string/space" />
-
-        <Button
-            android:id="@+id/enter_key"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_margin="3dp"
-            android:background="@drawable/key_bg"
-            android:textAllCaps="false"
-            android:textColor="@color/kb_text"
-            android:text="@string/enter" />
+            android:textSize="13sp"
+            android:text="@string/tap_to_dictate" />
 
         <ImageButton
-            android:id="@+id/backspace_key"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_margin="3dp"
-            android:background="@drawable/key_bg"
-            android:src="@drawable/ic_backspace"
-            android:contentDescription="@string/backspace_content_desc" />
+            android:id="@+id/mic_button"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/mic_button_bg"
+            android:backgroundTint="@color/mic_idle"
+            android:src="@drawable/ic_mic"
+            android:scaleType="centerInside"
+            android:padding="8dp"
+            android:contentDescription="@string/mic_content_desc" />
     </LinearLayout>
+
+    <!-- Key rows are built programmatically by KeyboardLayout into this container. -->
+    <LinearLayout
+        android:id="@+id/keys_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 </LinearLayout>
