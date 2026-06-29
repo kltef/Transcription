@@ -45,14 +45,14 @@ jobs:
       - name: Publish as a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.3.1-debug
-          name: Voice Keyboard v0.3.1 (debug)
+          tag_name: v0.3.2-debug
+          name: Voice Keyboard v0.3.2 (debug)
           body: |
             On-device voice dictation keyboard — arm64-v8a, debug-signed (sideload-ready).
 
-            **New in 0.3.1:** crash hardening — engine/key errors can no longer stop the keyboard,
-            and if the app does crash it now records the error so you can share it from the setup
-            screen (open the app → "Share"). Full QWERTY keyboard + on-device dictation as before.
+            **Fix in 0.3.2:** the keyboard no longer crashes ("keeps stopping") when you switch to
+            it — a toolbar style attribute didn't resolve inside the keyboard window. Plus crash
+            hardening and an in-app crash reporter. Full QWERTY keyboard + on-device dictation.
 
             **Install:** download `VoiceKeyboard-arm64-debug.apk` below on your phone and
             open it (allow "install unknown apps"). Then open the app, enable the keyboard,

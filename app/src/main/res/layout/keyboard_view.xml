@@ -21,7 +21,7 @@
             android:id="@+id/switch_ime"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/icon_button_bg"
             android:src="@drawable/ic_keyboard"
             android:contentDescription="@string/switch_ime_content_desc" />
 
@@ -29,7 +29,7 @@
             android:id="@+id/settings_key"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/icon_button_bg"
             android:src="@drawable/ic_settings"
             android:contentDescription="@string/settings_content_desc" />
 

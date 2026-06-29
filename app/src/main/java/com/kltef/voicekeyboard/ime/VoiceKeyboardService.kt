@@ -38,7 +38,13 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
     }
 
     override fun onCreateInputView(): View {
-        val b = KeyboardViewBinding.inflate(layoutInflater)
+        val b = try {
+            KeyboardViewBinding.inflate(layoutInflater)
+        } catch (e: Throwable) {
+            // Never let view inflation crash the keyboard process; show an empty view instead.
+            Log.e(TAG, "Failed to inflate keyboard view", e)
+            return View(this)
+        }
         binding = b
 
         b.micButton.setOnClickListener { v ->
