@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.inputmethodservice.InputMethodService
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.View
@@ -52,15 +53,29 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
 
-        // Build the QWERTY / symbols keyboard into the container.
-        keyboard = KeyboardLayout(this, b.keysContainer, object : KeyboardLayout.Listener {
-            override fun onChar(text: String) = commit(text)
-            override fun onBackspace() = sendBackspace()
-            override fun onBackspaceRepeat() = sendBackspace()
-            override fun onEnter() = sendEnter()
-            override fun haptic(v: View) = this@VoiceKeyboardService.haptic(v)
-        })
+        // Build the QWERTY / symbols keyboard into the container. Guarded so a build error
+        // can never crash the keyboard process.
+        try {
+            keyboard = KeyboardLayout(this, b.keysContainer, object : KeyboardLayout.Listener {
+                override fun onChar(text: String) = safely { commit(text) }
+                override fun onBackspace() = safely { sendBackspace() }
+                override fun onBackspaceRepeat() = safely { sendBackspace() }
+                override fun onEnter() = safely { sendEnter() }
+                override fun haptic(v: View) = this@VoiceKeyboardService.haptic(v)
+            })
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to build keyboard", e)
+        }
         return b.root
+    }
+
+    /** Run a key action without letting an exception crash the whole keyboard. */
+    private inline fun safely(block: () -> Unit) {
+        try {
+            block()
+        } catch (e: Throwable) {
+            Log.e(TAG, "key action failed", e)
+        }
     }
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
@@ -201,5 +216,9 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
 
     private fun haptic(v: View) {
         if (prefs.haptics) v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+    }
+
+    companion object {
+        private const val TAG = "VoiceKbIme"
     }
 }

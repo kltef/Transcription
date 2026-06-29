@@ -11,8 +11,8 @@ android {
         applicationId = "com.kltef.voicekeyboard"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.3.1"
 
         // Native engines (whisper.cpp via CMake) only ship for these ABIs.
         // arm64-v8a covers essentially all modern phones; armeabi-v7a is for older 32-bit devices.

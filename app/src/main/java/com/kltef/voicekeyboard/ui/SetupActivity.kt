@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
+import com.kltef.voicekeyboard.util.CrashLog
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -52,6 +54,25 @@ class SetupActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshStatuses()
+        maybeShowCrash()
+    }
+
+    /** If the app/keyboard crashed last time, offer to share the stack trace for diagnosis. */
+    private fun maybeShowCrash() {
+        val trace = CrashLog.read(this) ?: return
+        AlertDialog.Builder(this)
+            .setTitle("A crash was recorded")
+            .setMessage("Tap Share to send the error so it can be fixed.\n\n" + trace.take(3000))
+            .setPositiveButton("Share") { _, _ ->
+                startActivity(Intent.createChooser(
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, "Voice Keyboard crash")
+                        putExtra(Intent.EXTRA_TEXT, trace)
+                    }, "Share crash report"))
+            }
+            .setNegativeButton("Clear") { _, _ -> CrashLog.clear(this) }
+            .show()
     }
 
     private fun refreshStatuses() {

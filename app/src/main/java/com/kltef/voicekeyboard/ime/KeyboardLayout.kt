@@ -78,7 +78,7 @@ class KeyboardLayout(
 
         val row3 = newRow()
         row3.addView(iconKey(R.drawable.ic_shift, 1.5f, special = true) { onShift() }
-            .also { shiftIcon = (it as FrameLayout).getChildAt(0) as ImageView })
+            .also { shiftIcon = (it as? FrameLayout)?.getChildAt(0) as? ImageView })
         "zxcvbnm".forEach { row3.addView(charKey(it.toString(), 1f)) }
         row3.addView(backspaceKey(1.5f))
         container.addView(row3)
