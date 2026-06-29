@@ -45,16 +45,14 @@ jobs:
       - name: Publish as a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.3.7-debug
-          name: Voice Keyboard v0.3.7 (debug)
+          tag_name: v0.3.8-debug
+          name: Voice Keyboard v0.3.8 (debug)
           body: |
             On-device voice dictation keyboard — arm64-v8a, debug-signed (sideload-ready).
 
-            **Faster Whisper (0.3.7):** new model selector in settings — "Fast (tiny.en)" vs
-            "Accurate (base.en)" — defaulting to the fast tiny model. Combined with the -O3 build
-            and audio_ctx capping, tiny.en refine is well under a second on short dictation.
-            (faster-whisper/CTranslate2 itself isn't Android-portable; whisper.cpp + a small model
-            is the on-device equivalent.)
+            **Fix in 0.3.8:** repeated/looping dictation output is fixed — Whisper's repetition
+            safeguards are restored (kept the speedups within safe bounds), plus a code-level guard
+            collapses any runaway repeated word/phrase. Includes the tiny.en fast model selector.
 
             **Install:** download `VoiceKeyboard-arm64-debug.apk` below on your phone and
             open it (allow "install unknown apps"). Then open the app, enable the keyboard,

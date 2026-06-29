@@ -52,13 +52,14 @@ Java_com_kltef_voicekeyboard_asr_WhisperRefiner_nativeTranscribe(
     params.language         = "en";
     params.n_threads        = threads > 0 ? threads : 4;
     params.suppress_blank   = true;
-    params.temperature_inc  = 0.0f; // disable slow temperature-fallback retries
+    // Keep temperature fallback (default) ON: it breaks Whisper's repetition/hallucination loops.
 
-    // Big speedup for dictation: the encoder normally processes a full 30 s window. Cap the
-    // audio context to the actual utterance length (~50 encoder frames per second).
-    int audio_ctx = static_cast<int>(n / 320) + 16;
+    // Speed up the encoder by capping the audio context to roughly the utterance length
+    // (~50 encoder frames/sec) — but keep a generous floor + margin, since an over-small
+    // audio_ctx is itself a known cause of repeated/looped output.
+    int audio_ctx = static_cast<int>(n / 320) + 128;
     if (audio_ctx > 1500) audio_ctx = 1500;
-    if (audio_ctx < 64) audio_ctx = 64;
+    if (audio_ctx < 384) audio_ctx = 384;
     params.audio_ctx = audio_ctx;
 
     // Short phrases are a single segment; only allow multi-segment for long (>10 s) audio.

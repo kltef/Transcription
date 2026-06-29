@@ -134,7 +134,7 @@ class DictationController(
             finalText = punctuate(streamingText)
         }
 
-        finalText = TextFormatter.sentenceCase(finalText)
+        finalText = TextFormatter.clean(finalText)
         if (finalText.isNotBlank()) listener.onFinalSegment(finalText)
     }
 
