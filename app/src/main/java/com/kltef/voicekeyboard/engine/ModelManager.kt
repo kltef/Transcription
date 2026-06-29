@@ -7,40 +7,48 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Owns the on-disk location of the Whisper refine model and downloads it on first run.
+ * Owns the on-disk location of the Whisper refine model(s) and downloads them on demand.
  *
- * The streaming (sherpa-onnx) model is bundled in assets and always present; only the
- * larger Whisper model is fetched on demand to keep the APK small.
+ * Two choices are offered (selectable in settings): a fast "tiny.en" model and a more
+ * accurate "base.en". Only the selected one needs to be present. The streaming (sherpa-onnx)
+ * model is bundled in assets and always available; Whisper is fetched on demand.
  */
 object ModelManager {
     private const val TAG = "VoiceKbModels"
+    private const val MIN_VALID_BYTES = 5_000_000L // guard against truncated downloads
 
-    // ggml base.en, q5_1 quantized (~57 MB): a good accuracy/speed tradeoff for phones.
-    private const val WHISPER_URL =
-        "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en-q5_1.bin"
-    private const val WHISPER_FILENAME = "ggml-base.en-q5_1.bin"
-    private const val MIN_VALID_BYTES = 10_000_000L // guard against truncated downloads
+    /** A downloadable Whisper model. */
+    enum class WhisperModel(val key: String, val fileName: String, val url: String) {
+        TINY("tiny", "ggml-tiny.en-q5_1.bin",
+            "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en-q5_1.bin"),
+        BASE("base", "ggml-base.en-q5_1.bin",
+            "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en-q5_1.bin");
 
-    fun whisperModelFile(context: Context): File =
-        File(context.filesDir, "models/$WHISPER_FILENAME")
+        companion object {
+            fun from(key: String?): WhisperModel = entries.firstOrNull { it.key == key } ?: TINY
+        }
+    }
 
-    fun isWhisperReady(context: Context): Boolean {
-        val f = whisperModelFile(context)
+    fun modelFile(context: Context, model: WhisperModel): File =
+        File(context.filesDir, "models/${model.fileName}")
+
+    fun isReady(context: Context, model: WhisperModel): Boolean {
+        val f = modelFile(context, model)
         return f.exists() && f.length() >= MIN_VALID_BYTES
     }
 
     /**
-     * Downloads the Whisper model. [onProgress] receives 0..100. Runs synchronously, so call
-     * from a background thread. Returns true on success.
+     * Downloads [model]. [onProgress] receives 0..100. Runs synchronously — call from a
+     * background thread. Returns true on success.
      */
-    fun downloadWhisper(context: Context, onProgress: (Int) -> Unit): Boolean {
-        val dest = whisperModelFile(context)
+    fun download(context: Context, model: WhisperModel, onProgress: (Int) -> Unit): Boolean {
+        val dest = modelFile(context, model)
         dest.parentFile?.mkdirs()
-        val tmp = File(dest.parentFile, "$WHISPER_FILENAME.part")
+        val tmp = File(dest.parentFile, "${model.fileName}.part")
 
         var conn: HttpURLConnection? = null
         return try {
-            conn = (URL(WHISPER_URL).openConnection() as HttpURLConnection).apply {
+            conn = (URL(model.url).openConnection() as HttpURLConnection).apply {
                 connectTimeout = 30_000
                 readTimeout = 30_000
                 instanceFollowRedirects = true

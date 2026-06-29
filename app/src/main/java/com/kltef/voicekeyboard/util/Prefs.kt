@@ -28,11 +28,15 @@ class Prefs(context: Context) {
     /** Vibrate on key/mic interaction. */
     val haptics: Boolean get() = sp.getBoolean(KEY_HAPTICS, true)
 
+    /** Which Whisper refine model to use: "tiny" (fast) or "base" (accurate). */
+    val whisperModelKey: String get() = sp.getString(KEY_WHISPER_MODEL, "tiny") ?: "tiny"
+
     companion object {
         const val KEY_REFINE = "refine_with_whisper"
         const val KEY_STREAMING = "streaming_preview"
         const val KEY_PUNCTUATION = "auto_punctuation"
         const val KEY_THREADS = "cpu_threads"
         const val KEY_HAPTICS = "haptics"
+        const val KEY_WHISPER_MODEL = "whisper_model"
     }
 }

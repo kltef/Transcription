@@ -118,8 +118,9 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             return
         }
-        // Heads-up if the user enabled refine but hasn't downloaded the Whisper model yet.
-        if (prefs.refineWithWhisper && !ModelManager.isWhisperReady(this)) {
+        // Heads-up if the user enabled refine but hasn't downloaded the chosen Whisper model.
+        val model = ModelManager.WhisperModel.from(prefs.whisperModelKey)
+        if (prefs.refineWithWhisper && !ModelManager.isReady(this, model)) {
             // Not fatal: the controller falls back to streaming text. Just inform once.
             showStatus(R.string.models_missing)
         }

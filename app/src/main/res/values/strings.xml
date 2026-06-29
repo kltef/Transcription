@@ -29,7 +29,7 @@
     <string name="step_mic_desc">Dictation runs entirely on-device; audio never leaves your phone.</string>
     <string name="step_mic_btn">Grant microphone</string>
     <string name="step_model">4. Download the accuracy model</string>
-    <string name="step_model_desc">Whisper (base.en) refines each phrase for best accuracy. One-time ~60&#160;MB download.</string>
+    <string name="step_model_desc">Optional. Whisper refines each phrase for extra accuracy (choose Fast/Accurate in settings). One-time download (~30–60&#160;MB). Dictation already works without it.</string>
     <string name="step_model_btn">Download model</string>
     <string name="mic_granted">Microphone granted ✓</string>
     <string name="model_ready">Model ready ✓</string>
@@ -40,6 +40,8 @@
     <!-- Settings -->
     <string name="pref_refine_title">Refine with Whisper</string>
     <string name="pref_refine_summary">Slower. Re-transcribes each phrase with Whisper for maximum accuracy. Leave off for fast dictation (streaming already adds capitals + punctuation).</string>
+    <string name="pref_model_title">Whisper model</string>
+    <string name="pref_model_summary">Fast (tiny.en) is much quicker; Accurate (base.en) is slower but better. Used only when \"Refine with Whisper\" is on. Download the chosen model from the setup screen.</string>
     <string name="pref_threads_title">CPU threads</string>
     <string name="pref_threads_summary">More threads = faster refine, more battery.</string>
     <string name="pref_streaming_title">Live streaming preview</string>

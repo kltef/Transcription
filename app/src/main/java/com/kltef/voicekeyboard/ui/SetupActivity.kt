@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.kltef.voicekeyboard.R
 import com.kltef.voicekeyboard.databinding.ActivitySetupBinding
 import com.kltef.voicekeyboard.engine.ModelManager
+import com.kltef.voicekeyboard.util.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -82,7 +83,8 @@ class SetupActivity : AppCompatActivity() {
         binding.tvMicStatus.text = if (micGranted) getString(R.string.mic_granted) else ""
         binding.btnMic.isEnabled = !micGranted
 
-        val modelReady = ModelManager.isWhisperReady(this)
+        val model = ModelManager.WhisperModel.from(Prefs(this).whisperModelKey)
+        val modelReady = ModelManager.isReady(this, model)
         binding.tvModelStatus.text = if (modelReady) getString(R.string.model_ready) else ""
         binding.btnModel.isEnabled = !modelReady
     }
@@ -93,9 +95,10 @@ class SetupActivity : AppCompatActivity() {
         binding.progress.progress = 0
         binding.tvModelStatus.text = getString(R.string.downloading, 0)
 
+        val model = ModelManager.WhisperModel.from(Prefs(this).whisperModelKey)
         lifecycleScope.launch {
             val ok = withContext(Dispatchers.IO) {
-                ModelManager.downloadWhisper(this@SetupActivity) { pct ->
+                ModelManager.download(this@SetupActivity, model) { pct ->
                     runOnUiThread {
                         binding.progress.progress = pct
                         binding.tvModelStatus.text = getString(R.string.downloading, pct)

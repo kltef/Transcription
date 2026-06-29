@@ -22,6 +22,14 @@
             app:summary="@string/pref_punctuation_summary" />
 
         <ListPreference
+            app:key="whisper_model"
+            app:defaultValue="tiny"
+            app:title="@string/pref_model_title"
+            app:summary="@string/pref_model_summary"
+            app:entries="@array/model_entries"
+            app:entryValues="@array/model_values" />
+
+        <ListPreference
             app:key="cpu_threads"
             app:defaultValue="4"
             app:title="@string/pref_threads_title"

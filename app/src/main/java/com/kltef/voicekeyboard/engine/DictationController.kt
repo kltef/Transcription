@@ -166,9 +166,10 @@ class DictationController(
         whisper?.let { return it }
         if (whisperTriedToLoad) return null
         whisperTriedToLoad = true
-        if (!ModelManager.isWhisperReady(context)) return null
+        val model = ModelManager.WhisperModel.from(prefs.whisperModelKey)
+        if (!ModelManager.isReady(context, model)) return null
         whisper = WhisperRefiner.load(
-            ModelManager.whisperModelFile(context).absolutePath,
+            ModelManager.modelFile(context, model).absolutePath,
             prefs.threads
         )
         return whisper
