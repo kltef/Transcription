@@ -2,6 +2,8 @@ package com.kltef.voicekeyboard.asr
 
 import android.content.res.AssetManager
 import android.util.Log
+import com.k2fsa.sherpa.onnx.EndpointConfig
+import com.k2fsa.sherpa.onnx.EndpointRule
 import com.k2fsa.sherpa.onnx.FeatureConfig
 import com.k2fsa.sherpa.onnx.OnlineModelConfig
 import com.k2fsa.sherpa.onnx.OnlineRecognizer
@@ -40,8 +42,15 @@ class StreamingRecognizer(
         val config = OnlineRecognizerConfig(
             featConfig = FeatureConfig(sampleRate = 16000, featureDim = 80),
             modelConfig = modelConfig,
-            // Endpoint detection segments speech into utterances (used to trigger the Whisper refine).
+            // Endpoint detection segments speech into utterances (used to trigger refine/punctuation).
+            // Tighter trailing-silence thresholds than the defaults so a phrase finalizes ~1 s after
+            // you stop talking, which makes dictation feel snappier.
             enableEndpoint = true,
+            endpointConfig = EndpointConfig(
+                rule1 = EndpointRule(false, 1.8f, 0.0f), // silence after no decoded text
+                rule2 = EndpointRule(true, 1.0f, 0.0f),  // silence after some decoded text
+                rule3 = EndpointRule(false, 0.0f, 20.0f) // hard cap on utterance length (s)
+            ),
             decodingMethod = "greedy_search",
         )
         recognizer = OnlineRecognizer(assetManager, config)

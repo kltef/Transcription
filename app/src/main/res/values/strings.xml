@@ -44,6 +44,8 @@
     <string name="pref_threads_summary">More threads = faster refine, more battery.</string>
     <string name="pref_streaming_title">Live streaming preview</string>
     <string name="pref_streaming_summary">Show words as you speak (before refinement).</string>
+    <string name="pref_punctuation_title">Auto punctuation &amp; capitalization</string>
+    <string name="pref_punctuation_summary">Add capitals and punctuation to dictated text, even without the Whisper model.</string>
     <string name="pref_haptics_title">Haptic feedback</string>
     <string name="pref_haptics_summary">Vibrate on key presses and mic toggle.</string>
     <string name="pref_category_engine">Engine</string>

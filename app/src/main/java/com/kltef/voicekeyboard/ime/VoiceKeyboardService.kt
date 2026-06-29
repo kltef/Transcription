@@ -44,6 +44,7 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
             toggleDictation()
         }
         b.backspaceKey.setOnClickListener { v -> haptic(v); sendBackspace() }
+        b.backspaceKey.setOnLongClickListener { v -> haptic(v); deleteWord(); true }
         b.spaceKey.setOnClickListener { v -> haptic(v); commit(" ") }
         b.enterKey.setOnClickListener { v -> haptic(v); sendEnter() }
         b.switchIme.setOnClickListener {
@@ -150,6 +151,18 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
         }
     }
 
+    /** Long-press backspace: delete the word (and any trailing spaces) before the cursor. */
+    private fun deleteWord() {
+        val ic = currentInputConnection ?: return
+        val before = ic.getTextBeforeCursor(64, 0) ?: return
+        if (before.isEmpty()) return
+        var i = before.length
+        while (i > 0 && before[i - 1].isWhitespace()) i--       // trailing spaces
+        while (i > 0 && !before[i - 1].isWhitespace()) i--      // the word itself
+        val deleteCount = before.length - i
+        ic.deleteSurroundingText(if (deleteCount > 0) deleteCount else 1, 0)
+    }
+
     private fun sendEnter() {
         val ic = currentInputConnection ?: return
         val action = currentInputEditorInfo?.imeOptions?.and(EditorInfo.IME_MASK_ACTION)
@@ -166,11 +179,25 @@ class VoiceKeyboardService : InputMethodService(), DictationController.Listener 
     // ---- UI helpers ------------------------------------------------------------------
 
     private fun setMicActive(active: Boolean) {
+        val mic = binding?.micButton ?: return
         val color = ContextCompat.getColor(
             this, if (active) R.color.mic_active else R.color.mic_idle
         )
-        binding?.micButton?.backgroundTintList =
-            android.content.res.ColorStateList.valueOf(color)
+        mic.backgroundTintList = android.content.res.ColorStateList.valueOf(color)
+        if (active) {
+            // Gentle pulse while listening so it's obvious the mic is live.
+            mic.animate().scaleX(1.12f).scaleY(1.12f).setDuration(550)
+                .withEndAction { pulseBack(mic) }.start()
+        } else {
+            mic.animate().cancel()
+            mic.scaleX = 1f; mic.scaleY = 1f
+        }
+    }
+
+    private fun pulseBack(mic: View) {
+        if (controller?.isActive != true) return
+        mic.animate().scaleX(1f).scaleY(1f).setDuration(550)
+            .withEndAction { if (controller?.isActive == true) setMicActive(true) }.start()
     }
 
     private fun showStatus(resId: Int) {

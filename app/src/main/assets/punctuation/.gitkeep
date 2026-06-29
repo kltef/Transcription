@@ -1,0 +1,2 @@
+# The sherpa-onnx OnlinePunctuation model (model.int8.onnx + bpe.vocab) is placed here
+# by scripts/fetch-native.sh. Not committed to git (large binaries).

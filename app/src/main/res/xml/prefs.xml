@@ -15,6 +15,12 @@
             app:title="@string/pref_streaming_title"
             app:summary="@string/pref_streaming_summary" />
 
+        <SwitchPreferenceCompat
+            app:key="auto_punctuation"
+            app:defaultValue="true"
+            app:title="@string/pref_punctuation_title"
+            app:summary="@string/pref_punctuation_summary" />
+
         <ListPreference
             app:key="cpu_threads"
             app:defaultValue="4"

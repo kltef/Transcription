@@ -16,6 +16,9 @@ class Prefs(context: Context) {
     /** Show streaming words as you speak (before the Whisper refine pass). */
     val streamingPreview: Boolean get() = sp.getBoolean(KEY_STREAMING, true)
 
+    /** Add capitalization + punctuation to finalized text (independent of Whisper). */
+    val autoPunctuation: Boolean get() = sp.getBoolean(KEY_PUNCTUATION, true)
+
     /** CPU threads used by both engines. Clamped to a sane range. */
     val threads: Int get() = sp.getString(KEY_THREADS, "4")?.toIntOrNull()?.coerceIn(1, 8) ?: 4
 
@@ -25,6 +28,7 @@ class Prefs(context: Context) {
     companion object {
         const val KEY_REFINE = "refine_with_whisper"
         const val KEY_STREAMING = "streaming_preview"
+        const val KEY_PUNCTUATION = "auto_punctuation"
         const val KEY_THREADS = "cpu_threads"
         const val KEY_HAPTICS = "haptics"
     }

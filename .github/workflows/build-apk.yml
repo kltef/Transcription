@@ -45,12 +45,16 @@ jobs:
       - name: Publish as a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.1.0-debug
-          name: Voice Keyboard v0.1.0 (debug)
+          tag_name: v0.2.0-debug
+          name: Voice Keyboard v0.2.0 (debug)
           body: |
             On-device voice dictation keyboard — arm64-v8a, debug-signed (sideload-ready).
 
+            **New in 0.2.0:** automatic capitalization + punctuation (works even without the
+            Whisper model), snappier phrase finalization, long-press backspace to delete a word,
+            and a listening pulse on the mic.
+
             **Install:** download `VoiceKeyboard-arm64-debug.apk` below on your phone and
-            open it (allow "install unknown apps"). Then open the app to finish setup:
-            enable the keyboard, grant the microphone, and download the Whisper refine model.
+            open it (allow "install unknown apps"). Then open the app, enable the keyboard,
+            and grant the microphone. The Whisper model download is optional (extra accuracy).
           files: VoiceKeyboard-arm64-debug.apk

@@ -11,6 +11,8 @@ local.properties
 app/libs/*.aar
 app/src/main/assets/streaming-zipformer/*.onnx
 app/src/main/assets/streaming-zipformer/tokens.txt
+app/src/main/assets/punctuation/*.onnx
+app/src/main/assets/punctuation/bpe.vocab
 
 # whisper.cpp source vendored by scripts/fetch-native.sh (not committed)
 app/src/main/cpp/whisper.cpp/

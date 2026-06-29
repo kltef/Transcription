@@ -2,6 +2,7 @@ package com.kltef.voicekeyboard.engine
 
 import android.content.Context
 import android.util.Log
+import com.kltef.voicekeyboard.asr.PunctuationProcessor
 import com.kltef.voicekeyboard.asr.StreamingRecognizer
 import com.kltef.voicekeyboard.asr.WhisperRefiner
 import com.kltef.voicekeyboard.audio.AudioRecorder
@@ -47,6 +48,8 @@ class DictationController(
     private var streaming: StreamingRecognizer? = null
     private var whisper: WhisperRefiner? = null
     private var whisperTriedToLoad = false
+    private var punctuation: PunctuationProcessor? = null
+    private var punctuationTriedToLoad = false
 
     val isActive: Boolean get() = running
 
@@ -79,6 +82,7 @@ class DictationController(
         stop()
         streaming?.release(); streaming = null
         whisper?.release(); whisper = null
+        punctuation?.release(); punctuation = null
     }
 
     private fun runLoop() {
@@ -118,16 +122,33 @@ class DictationController(
         utterance.clear()
 
         val refiner = if (prefs.refineWithWhisper) ensureWhisper() else null
-        val finalText = if (refiner != null && samples.isNotEmpty()) {
+        var finalText: String
+        if (refiner != null && samples.isNotEmpty()) {
+            // Whisper already produces capitalized, punctuated text.
             listener.onStateChanged(State.REFINING)
             val refined = refiner.transcribe(samples)
             if (running) listener.onStateChanged(State.LISTENING)
-            refined.ifBlank { streamingText }
+            finalText = refined.ifBlank { punctuate(streamingText) }
         } else {
-            streamingText
+            // Streaming-only: post-process to add capitalization + punctuation.
+            finalText = punctuate(streamingText)
         }
 
         if (finalText.isNotBlank()) listener.onFinalSegment(finalText.trim())
+    }
+
+    /** Add capitalization + punctuation to streaming text, if enabled and the model loads. */
+    private fun punctuate(text: String): String {
+        if (text.isBlank() || !prefs.autoPunctuation) return text
+        return ensurePunctuation()?.format(text) ?: text
+    }
+
+    private fun ensurePunctuation(): PunctuationProcessor? {
+        punctuation?.let { return it }
+        if (punctuationTriedToLoad) return null
+        punctuationTriedToLoad = true
+        punctuation = PunctuationProcessor.load(context.assets, prefs.threads)
+        return punctuation
     }
 
     private fun ensureStreaming(): StreamingRecognizer? {

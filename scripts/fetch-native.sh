@@ -15,11 +15,12 @@ WHISPER_VER="1.7.4"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LIBS="$ROOT/app/libs"
 ASSETS="$ROOT/app/src/main/assets/streaming-zipformer"
+PUNCT_ASSETS="$ROOT/app/src/main/assets/punctuation"
 WHISPER_DIR="$ROOT/app/src/main/cpp/whisper.cpp"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-mkdir -p "$LIBS" "$ASSETS"
+mkdir -p "$LIBS" "$ASSETS" "$PUNCT_ASSETS"
 
 # --- 1. sherpa-onnx AAR ----------------------------------------------------------------
 AAR="sherpa-onnx-${SHERPA_VER}.aar"
@@ -53,6 +54,24 @@ if [ "$have_all" = false ]; then
   echo "Streaming model files placed in app/src/main/assets/streaming-zipformer/"
 else
   echo "Streaming model already present."
+fi
+
+# --- 2b. punctuation + capitalization model (sherpa-onnx OnlinePunctuation) -------------
+PUNCT="sherpa-onnx-online-punct-en-2024-08-06"
+PUNCT_NEEDED=( "model.int8.onnx" "bpe.vocab" )
+have_punct=true
+for f in "${PUNCT_NEEDED[@]}"; do [ -f "$PUNCT_ASSETS/$f" ] || have_punct=false; done
+if [ "$have_punct" = false ]; then
+  echo "Downloading punctuation model ..."
+  curl -fL --retry 3 -o "$TMP/punct.tar.bz2" \
+    "https://github.com/k2-fsa/sherpa-onnx/releases/download/punctuation-models/${PUNCT}.tar.bz2"
+  tar -xjf "$TMP/punct.tar.bz2" -C "$TMP"
+  for f in "${PUNCT_NEEDED[@]}"; do
+    cp "$TMP/$PUNCT/$f" "$PUNCT_ASSETS/$f"
+  done
+  echo "Punctuation model files placed in app/src/main/assets/punctuation/"
+else
+  echo "Punctuation model already present."
 fi
 
 # --- 3. whisper.cpp source -------------------------------------------------------------
